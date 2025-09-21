@@ -1,0 +1,18 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="240" fill="#3b82f6" stroke="#1e40af" stroke-width="8"/>
+  
+  <!-- Heart shape for gratitude -->
+  <path d="M256 400c-45-40-120-90-120-160 0-40 30-70 70-70 20 0 38 10 50 25 12-15 30-25 50-25 40 0 70 30 70 70 0 70-75 120-120 160z" fill="#ffffff"/>
+  
+  <!-- Sparkle effects -->
+  <circle cx="180" cy="180" r="8" fill="#fbbf24"/>
+  <circle cx="340" cy="160" r="6" fill="#fbbf24"/>
+  <circle cx="160" cy="320" r="5" fill="#fbbf24"/>
+  <circle cx="360" cy="340" r="7" fill="#fbbf24"/>
+  
+  <!-- Star sparkles -->
+  <path d="M200 140 l4 12 h12 l-10 7 4 12 -10-7 -10 7 4-12 -10-7 h12 z" fill="#fbbf24"/>
+  <path d="M320 120 l3 9 h9 l-7 5 3 9 -8-5 -8 5 3-9 -7-5 h9 z" fill="#fbbf24"/>
+  <path d="M380 280 l2 6 h6 l-5 3 2 6 -5-3 -5 3 2-6 -5-3 h6 z" fill="#fbbf24"/>
+</svg>
