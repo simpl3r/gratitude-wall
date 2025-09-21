@@ -1,11 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { ConnectWallet, Wallet } from '@coinbase/onchainkit/wallet';
 import { Avatar, Name } from '@coinbase/onchainkit/identity';
 import { base } from 'wagmi/chains';
 import { FarcasterShare } from '@/components/FarcasterShare';
+import { useAutoWallet } from '@/hooks/useAutoWallet';
 
 const CONTRACT_ADDRESS = '0x61026a5CF6F7F83cc6C622B1bBA7B3a4827b8026';
 
@@ -25,7 +26,14 @@ export default function Home() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showFarcasterShare, setShowFarcasterShare] = useState(false);
   const [submittedGratitude, setSubmittedGratitude] = useState('');
-  const { address, isConnected } = useAccount();
+  const { 
+    address, 
+    isConnected, 
+    isAutoConnecting, 
+    environment, 
+    shouldShowConnectButton,
+    connect: manualConnect 
+  } = useAutoWallet();
   
   const { writeContract, data: hash, error, isPending } = useWriteContract();
   
@@ -89,13 +97,36 @@ export default function Home() {
 
         {/* Wallet Connection */}
         <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-          {isConnected ? (
+          {/* Environment Info */}
+          {(environment.isFarcaster || environment.isBaseApp) && (
+            <div className="mb-4 p-3 bg-blue-50 rounded-lg">
+              <div className="flex items-center space-x-2">
+                <span className="text-blue-600">
+                  {environment.isFarcaster ? '🟣' : '🔵'}
+                </span>
+                <span className="text-sm font-medium text-blue-800">
+                  Running in {environment.isFarcaster ? 'Farcaster' : 'Base App'}
+                </span>
+              </div>
+            </div>
+          )}
+
+          {isAutoConnecting ? (
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-3"></div>
+              <p className="text-gray-600">Connecting wallet automatically...</p>
+            </div>
+          ) : isConnected ? (
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <Avatar address={address} className="w-10 h-10" />
                 <div>
                   <Name address={address} className="font-semibold" />
-                  <p className="text-sm text-gray-500">Connected to Base</p>
+                  <p className="text-sm text-gray-500">
+                    Connected to Base
+                    {environment.isFarcaster && ' via Farcaster'}
+                    {environment.isBaseApp && ' via Base App'}
+                  </p>
                 </div>
               </div>
               <Wallet>
@@ -106,12 +137,29 @@ export default function Home() {
             </div>
           ) : (
             <div className="text-center">
-              <p className="text-gray-600 mb-4">Connect your wallet to start sharing gratitude</p>
-              <Wallet>
-                <ConnectWallet className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold">
-                  Connect Wallet
-                </ConnectWallet>
-              </Wallet>
+              <p className="text-gray-600 mb-4">
+                {environment.isFarcaster || environment.isBaseApp 
+                  ? 'Wallet connection required' 
+                  : 'Connect your wallet to start sharing gratitude'
+                }
+              </p>
+              {shouldShowConnectButton && (
+                <div className="space-y-3">
+                  <Wallet>
+                    <ConnectWallet className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold">
+                      Connect Wallet
+                    </ConnectWallet>
+                  </Wallet>
+                  {(environment.isFarcaster || environment.isBaseApp) && (
+                    <button
+                      onClick={manualConnect}
+                      className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold"
+                    >
+                      Try Auto-Connect
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           )}
         </div>

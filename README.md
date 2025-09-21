@@ -1,14 +1,17 @@
-# 🙏 Gratitude Wall - Base Mini App
+# Gratitude Wall 🙏
 
-Гратитуд Волл - это мини-приложение для Base App, которое позволяет пользователям делиться тем, за что они благодарны каждый день, с подтверждением транзакций в блокчейне Base.
+A universal decentralized application for sharing daily gratitude on the Base blockchain. Works seamlessly across **Farcaster**, **Base App**, and regular web browsers with automatic wallet connection.
 
-## ✨ Особенности
+## ✨ Features
 
-- 📱 **Mini App для Base App** - работает внутри Base App
-- 🔗 **Интеграция с блокчейном** - каждый чекин записывается в смарт-контракт на Base
-- 💰 **Smart Wallet** - использует Coinbase Smart Wallet
-- 🎨 **Современный UI** - красивый интерфейс с Tailwind CSS
-- ⚡ **OnchainKit** - интеграция с компонентами Coinbase
+- 🔗 **Universal Compatibility**: Works in Farcaster, Base App, and web browsers
+- 🔄 **Auto Wallet Connection**: Automatically detects and connects wallets based on environment
+- 📱 **Smart Environment Detection**: Adapts UI and functionality for each platform
+- 🌐 **Multi-Platform Sharing**: Native sharing for Farcaster, Base App, and Web Share API
+- ⛓️ **Base Blockchain**: Daily gratitude check-ins stored on Base
+- 💼 **Smart Wallet Support**: Coinbase Smart Wallet integration
+- 🎨 **Beautiful UI**: Responsive design with Tailwind CSS
+- 📲 **PWA Ready**: Progressive Web App support
 
 ## 🚀 Быстрый старт
 

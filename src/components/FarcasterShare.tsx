@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { detectEnvironment } from '@/utils/environment';
 
 interface FarcasterShareProps {
   gratitudeText: string;
@@ -11,6 +12,11 @@ interface FarcasterShareProps {
 export function FarcasterShare({ gratitudeText, transactionHash, onClose }: FarcasterShareProps) {
   const [isSharing, setIsSharing] = useState(false);
   const [shareSuccess, setShareSuccess] = useState(false);
+  const [environment, setEnvironment] = useState(detectEnvironment());
+
+  useEffect(() => {
+    setEnvironment(detectEnvironment());
+  }, []);
 
   const handleShare = async () => {
     setIsSharing(true);
@@ -19,12 +25,27 @@ export function FarcasterShare({ gratitudeText, transactionHash, onClose }: Farc
       const postText = `🙏 Today I'm grateful for: ${gratitudeText}\n\n#GratitudeWall #Base #OnChain`;
       const embedUrl = `https://basescan.org/tx/${transactionHash}`;
       
-      // Проверяем, доступен ли Farcaster SDK в контексте Mini App
-      if (typeof window !== 'undefined' && (window as any).sdk?.actions?.composeCast) {
+      // Проверяем среду выполнения и используем соответствующий метод
+      if (environment.isFarcaster && (window as any).sdk?.actions?.composeCast) {
         // Используем Farcaster Mini App SDK
         await (window as any).sdk.actions.composeCast({
           text: postText,
           embeds: [embedUrl]
+        });
+        setShareSuccess(true);
+      } else if (environment.isBaseApp && (window as any).base?.share) {
+        // Используем Base App sharing API
+        await (window as any).base.share({
+          text: postText,
+          url: embedUrl
+        });
+        setShareSuccess(true);
+      } else if (navigator.share) {
+        // Используем Web Share API если доступен
+        await navigator.share({
+          title: 'My Gratitude',
+          text: postText,
+          url: embedUrl
         });
         setShareSuccess(true);
       } else {
@@ -34,7 +55,13 @@ export function FarcasterShare({ gratitudeText, transactionHash, onClose }: Farc
         setShareSuccess(true);
       }
     } catch (error) {
-      console.error('Error sharing to Farcaster:', error);
+      console.error('Error sharing:', error);
+      // В случае ошибки все равно открываем Warpcast
+      const postText = `🙏 Today I'm grateful for: ${gratitudeText}\n\n#GratitudeWall #Base #OnChain`;
+      const embedUrl = `https://basescan.org/tx/${transactionHash}`;
+      const warpcastUrl = `https://warpcast.com/~/compose?text=${encodeURIComponent(postText)}&embeds[]=${encodeURIComponent(embedUrl)}`;
+      window.open(warpcastUrl, '_blank');
+      setShareSuccess(true);
     } finally {
       setIsSharing(false);
     }
