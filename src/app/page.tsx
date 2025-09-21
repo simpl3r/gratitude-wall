@@ -119,9 +119,9 @@ export default function Home() {
           ) : isConnected ? (
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <Avatar address={address} className="w-10 h-10" />
+                {address && <Avatar address={address} className="w-10 h-10" />}
                 <div>
-                  <Name address={address} className="font-semibold" />
+                  {address && <Name address={address} className="font-semibold" />}
                   <p className="text-sm text-gray-500">
                     Connected to Base
                     {environment.isFarcaster && ' via Farcaster'}
